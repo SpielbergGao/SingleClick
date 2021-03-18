@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/
+/singleclick/src/androidTest/
+/singleclick/src/test/
+/app/src/androidTest/
+/app/src/test/
