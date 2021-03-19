@@ -87,7 +87,7 @@ class SingleClickAspect {
         }
     }
 
-    fun findViewInMethodArgs(args: Array<Any>?): View? {
+    private fun findViewInMethodArgs(args: Array<Any>?): View? {
         if (args == null || args.isEmpty()) {
             return null
         }
@@ -102,7 +102,7 @@ class SingleClickAspect {
         return null
     }
 
-    fun canClick(interval: Int): Boolean {
+    private fun canClick(interval: Int): Boolean {
         val l = System.currentTimeMillis() - mLastClickTime
         if (l > interval) {
             mLastClickTime = Calendar.getInstance().timeInMillis
