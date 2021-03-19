@@ -21,7 +21,6 @@ class SingleClickAspect {
 
     @Pointcut(POINTCUT_VIEW_METHOD)
     fun viewMethodPointcut() {
-
     }
 
     @Around("methodPointcut() || annotationPointcut() || viewMethodPointcut()")
@@ -37,8 +36,8 @@ class SingleClickAspect {
             //计算点击间隔，没有注解默认500，有注解按注解参数来，注解参数为空默认500；
             var interval = SingleClickManager.clickInterval
             if (hasAnnotation) {
-                val annotation = method!!.getAnnotation(SingleClick::class.java)
-                interval = annotation.value
+                val annotation = method?.getAnnotation(SingleClick::class.java)
+                interval = annotation?.value ?: 0
             }
             //获取被点击的view对象
             val args = joinPoint.args
@@ -82,18 +81,19 @@ class SingleClickAspect {
                 joinPoint.proceed()
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             //出现异常不拦截点击事件
             joinPoint.proceed()
         }
     }
 
     private fun findViewInMethodArgs(args: Array<Any>?): View? {
-        if (args == null || args.isEmpty()) {
+        if (args.isNullOrEmpty()) {
             return null
         }
-        for (i in args.indices) {
-            if (args[i] is View) {
-                val view = args[i] as View
+        repeat(args.size){
+            if (args[it] is View) {
+                val view = args[it] as View
                 if (view.id != View.NO_ID) {
                     return view
                 }
