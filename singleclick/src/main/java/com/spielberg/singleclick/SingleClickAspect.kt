@@ -46,25 +46,31 @@ class SingleClickAspect {
                 val id = view.id
                 //注解排除某个控件不防止双击
                 if (hasAnnotation) {
-                    val annotation = method!!.getAnnotation(SingleClick::class.java)
+                    val annotation = method?.getAnnotation(SingleClick::class.java)
                     //按id值排除不防止双击的按钮点击
-                    val except = annotation.except
-                    for (i in except) {
-                        if (i == id) {
-                            mLastClickTime = Calendar.getInstance().timeInMillis
-                            joinPoint.proceed()
-                            return
+                    val except = annotation?.except
+                    if (except != null) {
+                        for (i in except) {
+                            if (i == id) {
+                                mLastClickTime = Calendar.getInstance().timeInMillis
+                                joinPoint.proceed()
+                                return
+                            }
                         }
                     }
+
                     //按id名排除不防止双击的按钮点击（非app模块）
-                    val idName = annotation.exceptIdName
+                    val idName = annotation?.exceptIdName
                     val resources = view.resources
-                    for (name in idName) {
-                        val resId = resources.getIdentifier(name, "id", view.context.packageName)
-                        if (resId == id) {
-                            mLastClickTime = Calendar.getInstance().timeInMillis
-                            joinPoint.proceed()
-                            return
+                    if (idName != null) {
+                        for (name in idName) {
+                            val resId =
+                                resources.getIdentifier(name, "id", view.context.packageName)
+                            if (resId == id) {
+                                mLastClickTime = Calendar.getInstance().timeInMillis
+                                joinPoint.proceed()
+                                return
+                            }
                         }
                     }
                 }
@@ -91,7 +97,7 @@ class SingleClickAspect {
         if (args.isNullOrEmpty()) {
             return null
         }
-        repeat(args.size){
+        repeat(args.size) {
             if (args[it] is View) {
                 val view = args[it] as View
                 if (view.id != View.NO_ID) {
