@@ -109,7 +109,7 @@ class SingleClickAspect {
     }
 
     private fun canClick(interval: Int): Boolean {
-        val l = System.currentTimeMillis() - mLastClickTime
+        val l = Calendar.getInstance().timeInMillis - mLastClickTime
         if (l > interval) {
             mLastClickTime = Calendar.getInstance().timeInMillis
             return true
